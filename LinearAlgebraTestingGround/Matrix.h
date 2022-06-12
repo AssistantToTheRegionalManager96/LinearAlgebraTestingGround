@@ -22,16 +22,16 @@ class Matrix
 {
 private:
 	int col, row; // columns and row numbers
-	typedef std::vector<double> Row; //Typedef vector of doubles to define each row - this is not a variable, just a declaration of a type (you can't assign to this)
-	std::vector<Row> data; //A vector of rows creates our 2D matrix of data
+	typedef std::vector<double> Column; //Typedef vector of doubles to define each column - this is not a variable, just a declaration of a type (you can't assign to this)
+	std::vector<Column> data; //A vector of columns creates our 2D matrix of data
 public:
 	//Construct the vector of rows data, with size equal to columns, and containing instances of vectors of doubles the size of rows (remember how you instantiate a vector)
-	Matrix(int columns, int rows): row(rows), col(columns), data(columns, std::vector<double>(rows)) 
+	Matrix(int rows, int columns): col(columns), row(rows), data(rows, std::vector<double>(columns))
 	{
 
 	}
 
-	Matrix(int columns, int rows, MatrixType matrixType) : row(rows), col(columns), data(columns, std::vector<double>(rows))
+	Matrix(int rows, int columns, MatrixType matrixType) : col(columns), row(rows), data(rows, std::vector<double>(columns))
 	{
 		switch (matrixType)
 		{
@@ -49,7 +49,7 @@ public:
 		}
 	}
 
-	Row& operator[](int i) //Operator overload to allow for use of Matrix[i][j]
+	Column& operator[](int i) //Operator overload to allow for use of Matrix[i][j]
 	{
 		return data[i]; //This essentially allows us to stack data[i][j] -  the j index is what we added here, so data[i] gives ith columns, and then stacking [j] gives you reference to jth row
 	}
@@ -78,39 +78,39 @@ public:
 
 	void Transpose()
 	{
-		std::vector<Row> dataTemp;
-		std::vector<double> rowTemp;
+		std::vector<Column> dataTemp;
+		std::vector<double> colTemp;
 
-		for (int i = 0; i < row; i++)
+		for (int i = 0; i < col; i++)
 		{
-			rowTemp.clear();
-			for (int j = 0; j < col; j++)
+			colTemp.clear();
+			for (int j = 0; j < row; j++)
 			{
-				rowTemp.push_back(data[j].at(i));
+				colTemp.push_back(data[j].at(i));
 			}
-			dataTemp.push_back(rowTemp);
+			dataTemp.push_back(colTemp);
 		}
 
 		data = dataTemp;
-		row = data[0].size();
-		col = data.size();
+		col = data[0].size();
+		row = data.size();
 	}
 
 	std::tuple<int,int> Size() const
 	{
-		return std::make_tuple(col, row);
+		return std::make_tuple(row, col);
 	}
 
 	double DiagonalProduct() const
 	{
 		if (col != row) throw std::exception("Matrix must be square");
-		double sum = 0;
+		double product = 1;
 		for (int i = 0; i < col; i++)
 		{
-			sum *= data[i].at(i);
+			product *= data[i].at(i);
 		}
 
-		return sum;
+		return product;
 	}
 
 
@@ -132,26 +132,27 @@ public:
 
 		Matrix tempMatrix = *this;
 		std::tuple<Matrix, Matrix> LU = LUDecomposition(tempMatrix);
+		double determinant  = std::get<0>(LU).DiagonalProduct() * std::get<1>(LU).DiagonalProduct();
 
-		return std::get<0>(LU).DiagonalProduct() * std::get<1>(LU).DiagonalProduct();
+		return determinant;
 	}
 
 	void Inverse()
 	{
 
 	}
-
-
 };
+
+
 
 std::tuple<Matrix, Matrix> LUDecomposition(Matrix& matrix) //This function decomposes input square matrix A into lower triangular matrix L and upper triangular matrix U such that A=LU (Doolittle)
 {
 	std::tuple<int, int> size = matrix.Size();
-	int col = std::get<0>(size);
-	int row = std::get<1>(size);
+	int row = std::get<0>(size);
+	int col = std::get<1>(size);
 
-	Matrix lower(col, row);
-	Matrix upper(col, row);
+	Matrix lower(row, col);
+	Matrix upper(row, col);
 
 	for (int i = 0; i < col; i++)
 	{
@@ -160,9 +161,9 @@ std::tuple<Matrix, Matrix> LUDecomposition(Matrix& matrix) //This function decom
 			int sum = 0;
 			for (int j = 0; j < i; j++)
 			{
-				sum += lower[j][i] * upper[k][j];
+				sum += lower[i][j] * upper[j][k];
 			}
-			upper[k][i] = matrix[k][i] - sum;
+			upper[i][k] = matrix[i][k] - sum;
 		}
 
 		for (int k = i; k < col; k++)
@@ -173,9 +174,9 @@ std::tuple<Matrix, Matrix> LUDecomposition(Matrix& matrix) //This function decom
 				int sum = 0;
 				for (int j = 0; j < i; j++)
 				{
-					sum += lower[j][k] * upper[i][j];
+					sum += lower[k][j] * upper[j][i];
 				}
-				lower[i][k] = (matrix[i][k] - sum) / upper[i][i];
+				lower[k][i] = (matrix[k][i] - sum) / upper[i][i];
 			}
 
 		}

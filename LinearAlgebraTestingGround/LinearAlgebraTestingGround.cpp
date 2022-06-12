@@ -19,10 +19,19 @@ int main()
     //{
     //    for (int j = 0; j < 3; j++)
     //    {
-    //        sampleMatrix[j][i] = array[k];
+    //        sampleMatrix[i][j] = array[k];
     //        k++;
     //    }
     //}
+
+    //std::tuple<Matrix, Matrix> LU = LUDecomposition(sampleMatrix);
+
+    //Matrix m1 = std::get<0>(LU);
+    //Matrix m2 = get<1>(LU);
+
+    //double det = sampleMatrix.Determinant();
+    //double o = 0;
+
 
 
 
@@ -63,16 +72,18 @@ int main()
 
 
     sampleMatrix[0][0] = 1;
-    sampleMatrix[1][0] = 2;
-    sampleMatrix[0][1] = 3;
-    sampleMatrix[1][1] = 4;
-    sampleMatrix[0][2] = 5;
+    sampleMatrix[0][1] = 2;
+    sampleMatrix[0][2] = 3;
+    sampleMatrix[1][0] = 4;
+    sampleMatrix[1][1] = 5;
     sampleMatrix[1][2] = 6;
 
     Matrix sampleMatrix2 = sampleMatrix;
-    Matrix sampleMatrix3(2,3);
-    //sampleMatrix.Transpose();
+    //Matrix sampleMatrix3(2,3);
+    sampleMatrix.Transpose();
 
+    Matrix sampleMatrix3 = sampleMatrix * sampleMatrix2;
+    sampleMatrix3.Size();
 
     //tuple<int, int> size = sampleMatrix.Size();
     //

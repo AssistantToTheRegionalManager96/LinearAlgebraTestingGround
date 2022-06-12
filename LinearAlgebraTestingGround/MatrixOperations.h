@@ -9,23 +9,23 @@ Matrix operator*(Matrix& matrix1, Matrix& matrix2)
 	std::tuple<int, int> size1 = matrix1.Size();
 	std::tuple<int, int> size2 = matrix2.Size();
 
-	if (std::get<0>(size1) != std::get<1>(size2)) throw std::exception("Wrong dimensions");
+	if (std::get<1>(size1) != std::get<0>(size2)) throw std::exception("Wrong dimensions");
 
-	int col = std::get<1>(size1);
-	int row = std::get<0>(size2);
-	Matrix tempMatrix = Matrix(col, row);
+	int col = std::get<0>(size1);
+	int row = std::get<1>(size2);
+	Matrix tempMatrix = Matrix(row, col);
 	double tempValue;
 
-	for (int k = 0; k < col; k++)
+	for (int k = 0; k < row; k++)
 	{
 		for (int i = 0; i < col; i++)
 		{
-			tempValue = matrix1[0][k] * matrix2[i][0];
-			for (int j = 0; j < std::get<0>(size1)-1; j++)
+			tempValue = matrix1[k][0] * matrix2[0][i];
+			for (int j = 0; j < std::get<1>(size1)-1; j++)
 			{
-				tempValue += matrix1[j + 1][k] * matrix2[i][j + 1];
+				tempValue += matrix1[k][j + 1] * matrix2[j + 1][i];
 			}
-			tempMatrix[i][k] = tempValue;
+			tempMatrix[k][i] = tempValue;
 		}
 
 	}
@@ -36,8 +36,8 @@ Matrix operator*(Matrix& matrix1, Matrix& matrix2)
 Matrix operator*(Matrix& matrix, double number)
 {
 	std::tuple<int, int> size1 = matrix.Size();
-	int col = std::get<0>(size1);
-	int row = std::get<1>(size1);
+	int row = std::get<0>(size1);
+	int col = std::get<1>(size1);
 
 	Matrix tempMatrix = matrix;
 
@@ -45,7 +45,7 @@ Matrix operator*(Matrix& matrix, double number)
 	{
 		for (int j = 0; j < col; j++)
 		{
-			tempMatrix[j][i] = tempMatrix[j][i] * number;
+			tempMatrix[i][j] = tempMatrix[i][j] * number;
 		}
 	}
 	return tempMatrix;
@@ -56,8 +56,8 @@ Matrix operator/(Matrix& matrix, double number)
 	if (number == 0) throw std::exception("Don't divide by 0");
 
 	std::tuple<int, int> size1 = matrix.Size();
-	int col = std::get<0>(size1);
-	int row = std::get<1>(size1);
+	int row = std::get<0>(size1);
+	int col = std::get<1>(size1);
 
 	Matrix tempMatrix = matrix;
 
@@ -65,7 +65,7 @@ Matrix operator/(Matrix& matrix, double number)
 	{
 		for (int j = 0; j < col; j++)
 		{
-			tempMatrix[j][i] = tempMatrix[j][i] / number;
+			tempMatrix[i][j] = tempMatrix[i][j] / number;
 		}
 	}
 	return tempMatrix;
@@ -78,16 +78,16 @@ Matrix operator+(Matrix& matrix1, Matrix& matrix2)
 
 	if (size1 != size2) throw std::exception("Wrong dimensions");
 
-	int col = std::get<0>(size1);
-	int row = std::get<1>(size1);
+	int row = std::get<0>(size1);
+	int col = std::get<1>(size1);
 
-	Matrix tempMatrix = Matrix(col, row);
+	Matrix tempMatrix = Matrix(row, col);
 
 	for (int i = 0; i < row; i++)
 	{
 		for (int j = 0; j < col; j++)
 		{
-			tempMatrix[j][i] = matrix1[j][i] + matrix2[j][i];
+			tempMatrix[i][j] = matrix1[i][j] + matrix2[i][j];
 		}
 	}
 
@@ -98,8 +98,8 @@ Matrix operator+(Matrix& matrix, double number)
 {
 
 	std::tuple<int, int> size1 = matrix.Size();
-	int col = std::get<0>(size1);
-	int row = std::get<1>(size1);
+	int row = std::get<0>(size1);
+	int col = std::get<1>(size1);
 
 	Matrix tempMatrix = matrix;
 
@@ -107,7 +107,7 @@ Matrix operator+(Matrix& matrix, double number)
 	{
 		for (int j = 0; j < col; j++)
 		{
-			tempMatrix[j][i] = tempMatrix[j][i] + number;
+			tempMatrix[i][j] = tempMatrix[i][j] + number;
 		}
 	}
 	return tempMatrix;
@@ -118,18 +118,18 @@ Matrix operator-(Matrix& matrix1, Matrix& matrix2)
 	std::tuple<int, int> size1 = matrix1.Size();
 	std::tuple<int, int> size2 = matrix2.Size();
 
-	if (size1 != size2) throw std::exception("Wrong dimensions bro");
+	if (size1 != size2) throw std::exception("Wrong dimensions");
 
-	int col = std::get<0>(size1);
-	int row = std::get<1>(size1);
+	int row = std::get<0>(size1);
+	int col = std::get<1>(size1);
 
-	Matrix tempMatrix = Matrix(col, row);
+	Matrix tempMatrix = Matrix(row, col);
 
 	for (int i = 0; i < row; i++)
 	{
 		for (int j = 0; j < col; j++)
 		{
-			tempMatrix[j][i] = matrix1[j][i] - matrix2[j][i];
+			tempMatrix[i][j] = matrix1[i][j] - matrix2[i][j];
 		}
 	}
 
@@ -140,8 +140,8 @@ Matrix operator-(Matrix& matrix, double number)
 {
 
 	std::tuple<int, int> size1 = matrix.Size();
-	int col = std::get<0>(size1);
-	int row = std::get<1>(size1);
+	int row = std::get<0>(size1);
+	int col = std::get<1>(size1);
 
 	Matrix tempMatrix = matrix;
 
@@ -149,52 +149,52 @@ Matrix operator-(Matrix& matrix, double number)
 	{
 		for (int j = 0; j < col; j++)
 		{
-			tempMatrix[j][i] = tempMatrix[j][i] - number;
+			tempMatrix[i][j] = tempMatrix[i][j] - number;
 		}
 	}
 	return tempMatrix;
 }
 
-Matrix operator&(Matrix& matrix1, Matrix& matrix2)
+Matrix operator&(Matrix& matrix1, Matrix& matrix2) // Elementwise multiply
 {
 	std::tuple<int, int> size1 = matrix1.Size();
 	std::tuple<int, int> size2 = matrix2.Size();
 
 	if (size1 != size2) throw std::exception("Wrong dimensions");
 
-	int col = std::get<0>(size1);
-	int row = std::get<1>(size1);
+	int row = std::get<0>(size1);
+	int col = std::get<1>(size1);
 
-	Matrix tempMatrix = Matrix(col, row);
+	Matrix tempMatrix = Matrix(row, col);
 
 	for (int i = 0; i < row; i++)
 	{
 		for (int j = 0; j < col; j++)
 		{
-			tempMatrix[j][i] = matrix1[j][i] * matrix2[j][i];
+			tempMatrix[i][j] = matrix1[i][j] * matrix2[i][j];
 		}
 	}
 
 	return tempMatrix;
 }
 
-Matrix operator|(Matrix& matrix1, Matrix& matrix2)
+Matrix operator|(Matrix& matrix1, Matrix& matrix2) // Elementwise divide
 {
 	std::tuple<int, int> size1 = matrix1.Size();
 	std::tuple<int, int> size2 = matrix2.Size();
 
 	if (size1 != size2) throw std::exception("Wrong dimensions");
 
-	int col = std::get<0>(size1);
-	int row = std::get<1>(size1);
+	int row = std::get<0>(size1);
+	int col = std::get<1>(size1);
 
-	Matrix tempMatrix = Matrix(col, row);
+	Matrix tempMatrix = Matrix(row, col);
 
 	for (int i = 0; i < row; i++)
 	{
 		for (int j = 0; j < col; j++)
 		{
-			tempMatrix[j][i] = matrix1[j][i] * matrix2[j][i];
+			tempMatrix[i][j] = matrix1[i][j] / matrix2[i][j];
 		}
 	}
 
@@ -207,8 +207,8 @@ Matrix operator^(Matrix& matrix, double exponent)
 	if (exponent > 0)
 	{
 		std::tuple<int, int> size1 = matrix.Size();
-		int col = std::get<0>(size1);
-		int row = std::get<1>(size1);
+		int row = std::get<0>(size1);
+		int col = std::get<1>(size1);
 
 		if (col != row) throw std::exception("Matrix must be square");
 
