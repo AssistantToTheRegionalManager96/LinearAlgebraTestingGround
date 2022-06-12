@@ -11,26 +11,28 @@ using namespace std;
 
 int main()
 {
-    //int array[9] = { 2, -1, -2, -4, 6, 3, -4, -2, 8 };
-    //int k = 0;
+    int array[9] = { 2, -1, -2, -4, 6, 3, -4, -2, 8 };
+    int k = 0;
 
-    //Matrix sampleMatrix(3, 3);
-    //for (int i = 0; i < 3; i++)
-    //{
-    //    for (int j = 0; j < 3; j++)
-    //    {
-    //        sampleMatrix[i][j] = array[k];
-    //        k++;
-    //    }
-    //}
+    Matrix sampleMatrix(3, 3);
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            sampleMatrix[i][j] = array[k];
+            k++;
+        }
+    }
 
-    //std::tuple<Matrix, Matrix> LU = LUDecomposition(sampleMatrix);
+    std::vector<double> eigenvalues = sampleMatrix.Eigenvalues();
+    //std::tuple<Matrix, Matrix> LU = QRDecomposition(sampleMatrix);
+
 
     //Matrix m1 = std::get<0>(LU);
     //Matrix m2 = get<1>(LU);
 
     //double det = sampleMatrix.Determinant();
-    //double o = 0;
+    double o = 0;
 
 
 
@@ -67,23 +69,23 @@ int main()
     //}
 
     //int o = 0;
-    Matrix sampleMatrix(2, 3);
+    //Matrix sampleMatrix(2, 3);
 
 
 
-    sampleMatrix[0][0] = 1;
-    sampleMatrix[0][1] = 2;
-    sampleMatrix[0][2] = 3;
-    sampleMatrix[1][0] = 4;
-    sampleMatrix[1][1] = 5;
-    sampleMatrix[1][2] = 6;
+    //sampleMatrix[0][0] = 1;
+    //sampleMatrix[0][1] = 2;
+    //sampleMatrix[0][2] = 3;
+    //sampleMatrix[1][0] = 4;
+    //sampleMatrix[1][1] = 5;
+    //sampleMatrix[1][2] = 6;
 
-    Matrix sampleMatrix2 = sampleMatrix;
+    //Matrix sampleMatrix2 = sampleMatrix;
     //Matrix sampleMatrix3(2,3);
-    sampleMatrix.Transpose();
+    //sampleMatrix.Transpose();
 
-    Matrix sampleMatrix3 = sampleMatrix * sampleMatrix2;
-    sampleMatrix3.Size();
+    //Matrix sampleMatrix3 = sampleMatrix * sampleMatrix2;
+    //sampleMatrix3.Size();
 
     //tuple<int, int> size = sampleMatrix.Size();
     //

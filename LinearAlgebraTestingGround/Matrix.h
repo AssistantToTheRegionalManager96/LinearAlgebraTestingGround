@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <tuple>
+#include <cmath>
 //#include "MatrixOperations.h"
 
 
@@ -15,6 +16,7 @@ enum MatrixType
 
 class Matrix; // This lets LUDecomposition know a Matrix type exists
 std::tuple<Matrix, Matrix> LUDecomposition(Matrix& matrix); // this lets the Matrix class knows that a LUDecomposition function exists.
+std::tuple<Matrix, Matrix> QRDecomposition(Matrix& matrix); // this lets the Matrix class know that a QRdecomposition function exists.
 
 
 
@@ -137,6 +139,46 @@ public:
 		return determinant;
 	}
 
+	std::vector<double> Eigenvalues() const
+	{
+		std::vector<double> eigenvalues;
+		if (col != row) throw std::exception("Matrix must be square");
+		Matrix tempMatrix = *this;
+		std::tuple<Matrix, Matrix> QR = QRDecomposition(tempMatrix);
+		tempMatrix = std::get<1>(QR) * std::get<0>(QR);
+
+		while (!tempMatrix.IsUpperTri(0.000001))
+		{
+			QR = QRDecomposition(tempMatrix);
+			tempMatrix = std::get<1>(QR) * std::get<0>(QR);
+		}
+		for (int i = 0; i < col; i++)
+		{
+			eigenvalues.push_back(tempMatrix[i][i]);
+		}
+
+		return eigenvalues;
+	}
+
+	bool IsUpperTri(double tolerance)
+	{
+		bool IsZero = true;
+		for (int i = 1; i < row; i++)
+		{
+			for (int j = 0; j < i; j++)
+			{
+				IsZero = data[i].at(j) < tolerance;
+				if (!IsZero)
+				{
+					i = row - 1;
+					break;
+				}
+			}
+		}
+
+		return IsZero;
+	}
+
 	void Inverse()
 	{
 
@@ -185,3 +227,43 @@ std::tuple<Matrix, Matrix> LUDecomposition(Matrix& matrix) //This function decom
 	return std::make_tuple(lower, upper);
 }
 
+std::tuple<Matrix, Matrix> QRDecomposition(Matrix& matrix) // Decompose input matrix A into a product of an orthogonal matrix Q and an upper triangular matrix R (Modified Gram-Schmidt, Gander 1980)
+{
+	std::tuple<int, int> size = matrix.Size();
+	int row = std::get<0>(size);
+	int col = std::get<1>(size);
+
+	Matrix Q(row, col);
+	Matrix R(row, col);
+	double s;
+
+	for (int k = 0; k < row; k++)
+	{
+		s = 0;
+		for (int j = 0; j < col; j++)
+		{
+			s += matrix[j][k] * matrix[j][k];
+		}
+		R[k][k] = sqrt(s);
+		for (int j = 0; j < col; j++)
+		{
+			Q[j][k] = matrix[j][k] / R[k][k];
+		}
+
+		for (int i = k + 1; i < row; i++)
+		{
+			s = 0;
+			for (int j = 0; j < col; j++)
+			{
+				s += matrix[j][i] * Q[j][k];
+			}
+			R[k][i] = s;
+			for (int j = 0; j < col; j++)
+			{
+				matrix[j][i] -= R[k][i] * Q[j][k];
+			}
+		}
+	}
+
+	return std::make_tuple(Q, R);
+}

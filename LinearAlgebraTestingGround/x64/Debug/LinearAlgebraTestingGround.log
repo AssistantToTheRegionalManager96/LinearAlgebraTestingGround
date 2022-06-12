@@ -1,14 +1,15 @@
 ﻿  LinearAlgebraTestingGround.cpp
-C:\Repositories\MCVX\LinearAlgebraTestingGround\LinearAlgebraTestingGround\Matrix.h(95,1): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Repositories\MCVX\LinearAlgebraTestingGround\LinearAlgebraTestingGround\Matrix.h(96,1): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Repositories\MCVX\LinearAlgebraTestingGround\LinearAlgebraTestingGround\Matrix.h(164,24): warning C4244: '+=': conversion from '_Ty' to 'int', possible loss of data
+C:\Repositories\MCVX\LinearAlgebraTestingGround\LinearAlgebraTestingGround\Matrix.h(97,1): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Repositories\MCVX\LinearAlgebraTestingGround\LinearAlgebraTestingGround\Matrix.h(98,1): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Repositories\MCVX\LinearAlgebraTestingGround\LinearAlgebraTestingGround\Matrix.h(148,32): error C2676: binary '*': 'Matrix' does not define this operator or a conversion to a type acceptable to the predefined operator
+C:\Repositories\MCVX\LinearAlgebraTestingGround\LinearAlgebraTestingGround\Matrix.h(153,33): error C2676: binary '*': 'Matrix' does not define this operator or a conversion to a type acceptable to the predefined operator
+C:\Repositories\MCVX\LinearAlgebraTestingGround\LinearAlgebraTestingGround\Matrix.h(206,24): warning C4244: '+=': conversion from '_Ty' to 'int', possible loss of data
           with
           [
               _Ty=double
           ]
-C:\Repositories\MCVX\LinearAlgebraTestingGround\LinearAlgebraTestingGround\Matrix.h(177,25): warning C4244: '+=': conversion from '_Ty' to 'int', possible loss of data
+C:\Repositories\MCVX\LinearAlgebraTestingGround\LinearAlgebraTestingGround\Matrix.h(219,25): warning C4244: '+=': conversion from '_Ty' to 'int', possible loss of data
           with
           [
               _Ty=double
           ]
-  LinearAlgebraTestingGround.vcxproj -> C:\Repositories\MCVX\LinearAlgebraTestingGround\x64\Debug\LinearAlgebraTestingGround.exe
