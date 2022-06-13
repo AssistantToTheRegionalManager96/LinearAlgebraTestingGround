@@ -11,7 +11,8 @@ using namespace std;
 
 int main()
 {
-    int array[9] = { 2, -1, -2, -4, 6, 3, -4, -2, 8 };
+    //int array[9] = { 2, -1, -2, -4, 6, 3, -4, -2, 8 };
+    int array[9] = { 12, -51, 4, 6, 167, -68, -4, 24, -41 };
     int k = 0;
 
     Matrix sampleMatrix(3, 3);
@@ -23,18 +24,18 @@ int main()
             k++;
         }
     }
-
+    //std::tuple<Matrix, Matrix> QR = sampleMatrix.QRDecomposition();
     std::vector<double> eigenvalues = sampleMatrix.Eigenvalues();
-    //std::tuple<Matrix, Matrix> LU = QRDecomposition(sampleMatrix);
+    sampleMatrix.Size();
 
 
-    //Matrix m1 = std::get<0>(LU);
-    //Matrix m2 = get<1>(LU);
+    ////Matrix m1 = std::get<0>(LU);
+    ////Matrix m2 = get<1>(LU);
 
-    //double det = sampleMatrix.Determinant();
-    double o = 0;
+    ////double det = sampleMatrix.Determinant();
+    //double o = 0;
 
-
+    
 
 
     //Matrix lower(3, 3);
@@ -79,6 +80,14 @@ int main()
     //sampleMatrix[1][0] = 4;
     //sampleMatrix[1][1] = 5;
     //sampleMatrix[1][2] = 6;
+
+    //sampleMatrix = sampleMatrix * 2;
+
+
+    //std::vector<double> eigs = sampleMatrix.Eigenvalues();
+
+    //sampleMatrix.Size();
+
 
     //Matrix sampleMatrix2 = sampleMatrix;
     //Matrix sampleMatrix3(2,3);
