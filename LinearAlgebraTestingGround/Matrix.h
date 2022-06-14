@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <tuple>
+#include <complex>
 
 enum MatrixType
 {
@@ -21,19 +22,23 @@ public:
 	Matrix(int rows, int columns);
 	Matrix(int rows, int columns, MatrixType matrixType);
 
-	//Public methods:
-	void Fill(double number); // Fill matrix entries with a number
-	void MakeIdentity(); // Make the matrix an identity
-	void Transpose(); //Transpose matrix
+	//Const methods:
 	std::tuple<int, int> Size() const; //Return size of matrix (col, row)
 	double DiagonalProduct() const; //Product of diagonal terms (must be square)
 	double Trace() const; //Sum of diagonal terms (must be square)
 	double Determinant() const; //Determinant (must be square)
 	std::vector<double> Eigenvalues() const; //Eigenvalues (must be square)
-	bool IsUpperTri(double tolerance); //Is the matrix upper triangular ?
-	void Inverse(); //Invert the matrix
+	bool IsUpperTri(double tolerance) const; //Is the matrix upper triangular ?
+	bool IsSymmetric(double tolerance) const; //Is the matrix symmetric ?
 	std::tuple<Matrix, Matrix> LUDecomposition() const; //Decompose A into lower triangular matrix L and upper triangular matrix U such that A=LU (Doolittle)
 	std::tuple<Matrix, Matrix> QRDecomposition() const; //Decompose A into orthogonal matrix Q and upper triangular matrix R such that A=QR (Modified Gram-Schmidt)
+
+	//Non-const methods:
+	void Fill(double number); // Fill matrix entries with a number
+	void MakeIdentity(); // Make the matrix an identity
+	void Transpose(); //Transpose matrix
+	void Inverse(); //Invert the matrix
+
 
 	//Operator overloads with *this on LHS:
 	Column& operator[](int i) //Operator overload to allow for use of Matrix[i][j]

@@ -115,9 +115,11 @@ std::vector<double> Matrix::Eigenvalues() const
 
 	while (!tempMatrix.IsUpperTri(0.000001))
 	{
-		QR = QRDecomposition();
+		QR = tempMatrix.QRDecomposition();
 		tempMatrix = std::get<1>(QR) * std::get<0>(QR);
 	}
+	QR = tempMatrix.QRDecomposition();
+	Matrix V = std::get<0>(QR);
 	for (int i = 0; i < col; i++)
 	{
 		eigenvalues.push_back(tempMatrix[i][i]);
@@ -126,7 +128,7 @@ std::vector<double> Matrix::Eigenvalues() const
 	return eigenvalues;
 }
 
-bool Matrix::IsUpperTri(double tolerance)
+bool Matrix::IsUpperTri(double tolerance) const
 {
 	bool IsZero = true;
 	for (int i = 1; i < row; i++)
@@ -136,13 +138,33 @@ bool Matrix::IsUpperTri(double tolerance)
 			IsZero = data[i].at(j) < tolerance;
 			if (!IsZero)
 			{
-				i = row - 1;
-				break;
+				return IsZero;
 			}
 		}
 	}
 
 	return IsZero;
+}
+
+bool Matrix::IsSymmetric(double tolerance) const
+{
+	Matrix matrix = *this;
+	std::tuple<int, int> size = matrix.Size();
+	int row = std::get<0>(size);
+	int col = std::get<1>(size);
+	bool IsSymmetric = row == col;
+	if (!IsSymmetric) return IsSymmetric;
+
+	for (int i = 0; i < col; i++)
+	{
+		for (int j = i; j < col - i; j++)
+		{
+			IsSymmetric = matrix[i][j] == matrix[j][i];
+			if (!IsSymmetric) return IsSymmetric;
+		}
+	}
+
+	return IsSymmetric;
 }
 
 std::tuple<Matrix, Matrix> Matrix::LUDecomposition() const //This function decomposes input square matrix A into lower triangular matrix L and upper triangular matrix U such that A=LU (Doolittle)
