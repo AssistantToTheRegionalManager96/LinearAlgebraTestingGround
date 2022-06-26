@@ -19,8 +19,13 @@ private:
 	std::vector<Column> data; //A vector of columns creates our 2D matrix of data
 public:
 	//Constructors:
-	Matrix(int rows, int columns);
+	//Matrix(Matrix&& matrix)
+	//{
+	//	data = std::move(matrix.data);
+	//}
 	Matrix(int rows, int columns, MatrixType matrixType);
+
+	Matrix(int rows, int columns);
 
 	//Const methods:
 	std::tuple<int, int> Size() const; //Return size of matrix (col, row)

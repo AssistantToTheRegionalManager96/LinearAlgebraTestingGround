@@ -49,13 +49,12 @@ void Matrix::Transpose()
 {
 	std::vector<Column> dataTemp;
 	std::vector<double> colTemp;
-
 	for (int i = 0; i < col; i++)
 	{
 		colTemp.clear();
 		for (int j = 0; j < row; j++)
 		{
-			colTemp.push_back(data[j].at(i));
+			colTemp.push_back(data[j][i]);
 		}
 		dataTemp.push_back(colTemp);
 	}
