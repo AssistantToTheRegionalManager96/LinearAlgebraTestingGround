@@ -1,9 +1,9 @@
 #include "Matrix.h"
+#include <stdexcept>
+//#include <sstream>
 
 Matrix::Matrix(int rows, int columns) : col(columns), row(rows), data(rows, std::vector<double>(columns))
-{
-
-}
+{}
 
 Matrix::Matrix(int rows, int columns, MatrixType matrixType) : col(columns), row(rows), data(rows, std::vector<double>(columns))
 {
@@ -20,6 +20,34 @@ Matrix::Matrix(int rows, int columns, MatrixType matrixType) : col(columns), row
 		break;
 	default:
 		break;
+	}
+}
+
+Matrix::Matrix(int rows, int columns, double dataArray[], int datasetSize) : col(columns), row(rows), data(rows, std::vector<double>(columns))
+{
+	if (datasetSize != rows * columns) throw std::runtime_error("Data size does not match declared matrix size");
+	int k{};
+	for (int i = 0; i < row; i++)
+	{
+		for (int j = 0; j < col; j++)
+		{
+			data[i][j] = dataArray[k];
+			k++;
+		}
+	}
+}
+
+Matrix::Matrix(int rows, int columns, std::vector<double> dataVector) : col(columns), row(rows), data(rows, std::vector<double>(columns))
+{
+	if (dataVector.size() != rows * columns) throw std::runtime_error("Data size does not match declared matrix size");
+	int k{};
+	for (int i = 0; i < row; i++)
+	{
+		for (int j = 0; j < col; j++)
+		{
+			data[i][j] = dataVector[k];
+			k++;
+		}
 	}
 }
 
@@ -64,6 +92,26 @@ void Matrix::Transpose()
 	row = data.size();
 }
 
+void Matrix::MakeHessenberg()
+{
+	Matrix matrix = *this;
+	Matrix x = Matrix(1, row - 1);
+	Matrix v = Matrix(1, row - 1, Zeros);
+	Matrix vt = Matrix(1, row - 1);
+	Matrix P = Matrix(col - 1, row - 1, Zeros);
+	for (int i = 1; i < row; i++)
+	{
+		x[1][i] = matrix[1][i];
+	}
+	v[0][0] = x.FrobeniusNorm();
+	v = v - x;
+	vt = v;
+	vt.Transpose();
+
+
+	// This is not working yet
+}
+
 std::tuple<int, int> Matrix::Size() const
 {
 	return std::make_tuple(row, col);
@@ -93,6 +141,20 @@ double Matrix::Trace() const
 	return sum;
 }
 
+double Matrix::FrobeniusNorm() const
+{
+	Matrix matrix = *this;
+	double sum{};
+	for (int i = 0; i < row; i++)
+	{
+		for (int j = 0; j < col; j++)
+		{
+			sum += pow(matrix[i][j], 2);
+		}
+	}
+	return sqrt(sum);
+}
+
 double Matrix::Determinant() const
 {
 	if (col != row) throw std::exception("Matrix must be square");
@@ -111,11 +173,15 @@ std::vector<double> Matrix::Eigenvalues() const
 	Matrix tempMatrix = *this;
 	std::tuple<Matrix, Matrix> QR = QRDecomposition();
 	tempMatrix = std::get<1>(QR) * std::get<0>(QR);
+	Matrix identityMatrix = Matrix(col, row, Identity);
+	Matrix sk = Matrix(row, row);
 
 	while (!tempMatrix.IsUpperTri(0.000001))
 	{
+		sk = identityMatrix * tempMatrix[col-1][row-1];
+		tempMatrix = tempMatrix - sk;
 		QR = tempMatrix.QRDecomposition();
-		tempMatrix = std::get<1>(QR) * std::get<0>(QR);
+		tempMatrix = std::get<1>(QR) * std::get<0>(QR) + sk;
 	}
 	QR = tempMatrix.QRDecomposition();
 	Matrix V = std::get<0>(QR);
@@ -133,6 +199,42 @@ bool Matrix::IsUpperTri(double tolerance) const
 	for (int i = 1; i < row; i++)
 	{
 		for (int j = 0; j < i; j++)
+		{
+			IsZero = data[i].at(j) < tolerance;
+			if (!IsZero)
+			{
+				return IsZero;
+			}
+		}
+	}
+
+	return IsZero;
+}
+
+bool Matrix::IsLowerTri(double tolerance) const
+{
+	bool IsZero = true;
+	for (int i = 0; i < row-1; i++)
+	{
+		for (int j = i+1; j < col-i-1; j++)
+		{
+			IsZero = data[i].at(j) < tolerance;
+			if (!IsZero)
+			{
+				return IsZero;
+			}
+		}
+	}
+
+	return IsZero;
+}
+
+bool Matrix::IsHessenberg(double tolerance) const
+{
+	bool IsZero = true;
+	for (int i = 2; i < row; i++)
+	{
+		for (int j = 0; j < i - 1; j++)
 		{
 			IsZero = data[i].at(j) < tolerance;
 			if (!IsZero)
@@ -558,4 +660,68 @@ Matrix Matrix::operator^(double exponent)
 
 	}
 	return tempMatrix;
+}
+
+Matrix ForwardSolve(Matrix L, Matrix b)
+{
+	std::tuple<int, int> sizeL = L.Size();
+	std::tuple<int, int> sizeb = b.Size();
+
+	if (!L.IsLowerTri(0.000001) || std::get<0>(sizeL) != std::get<0>(sizeb)) throw std::exception("Wrong dimensions");
+
+	Matrix x = Matrix(std::get<0>(sizeL), 1, Zeros);
+	double tmp;
+	for (int i = 0; i < std::get<1>(sizeL); i++)
+	{
+		tmp = b[i][0];
+		for (int j = 0; j < i; j++)
+		{
+			tmp -= L[i][j] * x[j][0];
+		}
+		x[i][0] = tmp / L[i][i];
+	}
+
+	return x;
+}
+
+Matrix BackwardSolve(Matrix U, Matrix b)
+{
+	std::tuple<int, int> sizeU = U.Size();
+	std::tuple<int, int> sizeb = b.Size();
+
+	if (!U.IsUpperTri(0.000001) || std::get<0>(sizeU) != std::get<0>(sizeb)) throw std::exception("Wrong matrix dimension or given matrix is not upper tri");
+
+	Matrix x = Matrix(std::get<0>(sizeU), 1, Zeros);
+	double tmp;
+	int i = std::get<1>(sizeU);
+	//for (int i = std::get<1>(sizeU); i > 0 ; i--)
+	while (i --> 0)
+	{
+		tmp = b[i][0];
+		for (int j = i; j < std::get<0>(sizeU); j++)
+		{
+			tmp -= U[i][j] * x[j][0];
+		}
+		x[i][0] = tmp / U[i][i];
+	}
+
+	return x;
+}
+
+Matrix LinsolveLU(Matrix A, Matrix b)
+{
+	std::tuple<int, int> sizeA = A.Size();
+	std::tuple<int, int> sizeb = b.Size();
+	Matrix y = Matrix(std::get<0>(sizeb), std::get<1>(sizeb));
+	Matrix x = Matrix(std::get<0>(sizeb), std::get<1>(sizeb));
+
+
+	if (std::get<0>(sizeA) != std::get<0>(sizeb)) throw std::exception("Wrong matrix dimension");
+
+	std::tuple<Matrix, Matrix> LU = A.LUDecomposition();
+
+	y = ForwardSolve(std::get<0>(LU), b);
+	x = BackwardSolve(std::get<1>(LU), y);
+
+	return x;
 }

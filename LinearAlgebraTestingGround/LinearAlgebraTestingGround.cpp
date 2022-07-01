@@ -9,31 +9,39 @@
 using namespace std;
 using namespace std::chrono;
 
-class MyData
-{
-private:
-    vector<int> private_data_;
-public:
-    MyData() {}
-    MyData(vector<int> data) : private_data_(data) {}
-
-    void setMyData(vector<int>&& sourceData)
-    {
-        private_data_ = std::move(sourceData);
-    }
-
-    void setMyData2(vector<int> sourceData)
-    {
-        private_data_ = sourceData;
-    }
-};
+//class MyData
+//{
+//private:
+//    vector<int> private_data_;
+//public:
+//    MyData() {}
+//    MyData(vector<int> data) : private_data_(data) {}
+//
+//    void setMyData(vector<int>&& sourceData)
+//    {
+//        private_data_ = std::move(sourceData);
+//    }
+//
+//    void setMyData2(vector<int> sourceData)
+//    {
+//        private_data_ = sourceData;
+//    }
+//};
 
 
 int main()
 {
+    vector<double> a = { 42, 13, 0, 0, 21, 5, 7, 0, 12 };
+    vector<double> b = { 4, 7, 2 };
+    Matrix A = Matrix(3, 3, a);
+    Matrix B = Matrix(3, 1, b);
+
+    Matrix x = LinsolveLU(A, B);
+
+
     //int array[9] = { 2, -1, -2, -4, 6, 3, -4, -2, 8 };
-    //int array[9] = { 12, -51, 4, 6, 167, -68, -4, 24, -41 };
-    //int k = 0;
+    int array[9] = { 12, -51, 4, 6, 167, -68, -4, 24, -41 };
+    int k = 0;
     //Matrix* sampleMatrix3;
 
 
@@ -46,24 +54,32 @@ int main()
 
     //sampleMatrix3 = new Matrix(2, 2);
 
-    //bitchLasagna();
 
-
-    //Matrix sampleMatrix(3, 3);
-    //for (int i = 0; i < 3; i++)
-    //{
-    //    for (int j = 0; j < 3; j++)
-    //    {
-    //        sampleMatrix[i][j] = array[k];
-    //        k++;
-    //    }
-    //}
+    Matrix sampleMatrix(3, 3);
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            sampleMatrix[i][j] = array[k];
+            k++;
+        }
+    }
     // 
 
-    Matrix sampleMatrix(1000, 1000);
-    sampleMatrix.MakeIdentity();
-    Matrix sampleMatrix2(1000, 1000);
-    sampleMatrix2.Fill(2);
+    //double arr[] = { 1, 2, 3, 4 };
+    //double dataset[4] = { 1, 2, 3, 4 };
+    //vector<double> dataVector = { 1, 2, 3, 4 };
+
+
+
+
+
+    //Matrix sampleMatrix(2,2, arr, sizeof(arr)/sizeof(arr[0]));
+    //Matrix smpleMatrix2(2, 2, dataVector);
+    //sampleMatrix.MakeIdentity();
+    //Matrix sampleMatrix2(1000, 1000);
+    //sampleMatrix2.Fill(2);
+
 
     //std::tuple<Matrix, Matrix> QR = sampleMatrix.QRDecomposition();
     //std::vector<double> eigenvalues = sampleMatrix.Eigenvalues();
@@ -76,38 +92,38 @@ int main()
 
     //MyData* data1 = new MyData(vec);
 
-    Matrix sampleMatrix3(1000, 1000);
+    //Matrix sampleMatrix3(1000, 1000);
 
-    auto start = high_resolution_clock::now();
+    //auto start = high_resolution_clock::now();
 
-    for (int i = 0; i < 1; i++)
-    {
-        //MyData* data2 = new MyData();
-        //data2->setMyData(std::move(vec));
+    //for (int i = 0; i < 1; i++)
+    //{
+    //    //MyData* data2 = new MyData();
+    //    //data2->setMyData(std::move(vec));
 
-        //data2->setMyData2(vec);
+    //    //data2->setMyData2(vec);
 
-        sampleMatrix3 = sampleMatrix * sampleMatrix2;
-
-
-        //Matrix* sampleMatrix2 = new Matrix(sampleMatrix);
-        //Matrix* sampleMatrix2;
-        //Matrix sampleMatrix2(sampleMatrix);
-        //auto d = Matrix(std::move(sampleMatrix));
-        //cout << &sampleMatrix << endl;
-        //auto d = Matrix(static_cast<Matrix&&>(sampleMatrix));
-
-    }
-    //sampleMatrix.Transpose();
-
-    auto stop = high_resolution_clock::now();
-
-    auto duration = duration_cast<microseconds>(stop - start);
+    //    //sampleMatrix3 = sampleMatrix * sampleMatrix2;
 
 
+    //    //Matrix* sampleMatrix2 = new Matrix(sampleMatrix);
+    //    //Matrix* sampleMatrix2;
+    //    //Matrix sampleMatrix2(sampleMatrix);
+    //    //auto d = Matrix(std::move(sampleMatrix));
+    //    //cout << &sampleMatrix << endl;
+    //    //auto d = Matrix(static_cast<Matrix&&>(sampleMatrix));
+
+    //}
+    ////sampleMatrix.Transpose();
+
+    //auto stop = high_resolution_clock::now();
+
+    //auto duration = duration_cast<microseconds>(stop - start);
 
 
-    sampleMatrix.Size();
+
+
+    //sampleMatrix.Size();
 
 
     ////Matrix m1 = std::get<0>(LU);
@@ -165,9 +181,11 @@ int main()
     //sampleMatrix = sampleMatrix * 2;
 
 
-    //std::vector<double> eigs = sampleMatrix.Eigenvalues();
+    std::vector<double> eigs = sampleMatrix.Eigenvalues();
 
-    //sampleMatrix.Size();
+    double norm = sampleMatrix.FrobeniusNorm();
+
+    sampleMatrix.Size();
 
 
     //Matrix sampleMatrix2 = sampleMatrix;

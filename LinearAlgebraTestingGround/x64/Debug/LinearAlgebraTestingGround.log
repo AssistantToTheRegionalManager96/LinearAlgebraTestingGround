@@ -1,12 +1,12 @@
 ﻿  Matrix.cpp
-C:\Repositories\MCVX\LinearAlgebraTestingGround\LinearAlgebraTestingGround\Matrix.cpp(63,22): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Repositories\MCVX\LinearAlgebraTestingGround\LinearAlgebraTestingGround\Matrix.cpp(64,19): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Repositories\MCVX\LinearAlgebraTestingGround\LinearAlgebraTestingGround\Matrix.cpp(186,24): warning C4244: '+=': conversion from '_Ty' to 'int', possible loss of data
+C:\Repositories\MCVX\LinearAlgebraTestingGround\LinearAlgebraTestingGround\Matrix.cpp(91,22): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Repositories\MCVX\LinearAlgebraTestingGround\LinearAlgebraTestingGround\Matrix.cpp(92,19): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Repositories\MCVX\LinearAlgebraTestingGround\LinearAlgebraTestingGround\Matrix.cpp(288,24): warning C4244: '+=': conversion from '_Ty' to 'int', possible loss of data
           with
           [
               _Ty=double
           ]
-C:\Repositories\MCVX\LinearAlgebraTestingGround\LinearAlgebraTestingGround\Matrix.cpp(199,25): warning C4244: '+=': conversion from '_Ty' to 'int', possible loss of data
+C:\Repositories\MCVX\LinearAlgebraTestingGround\LinearAlgebraTestingGround\Matrix.cpp(301,25): warning C4244: '+=': conversion from '_Ty' to 'int', possible loss of data
           with
           [
               _Ty=double
